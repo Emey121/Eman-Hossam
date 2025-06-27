@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إيمان & حسام - قصة حب</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <script>
+    const loveQuotes = [
+      "أنا بحبك من قلبي ♥",
+      "إنت دايمًا السبب في ابتسامتي 😊",
+      "كل لحظة معاك هي أجمل لحظة في حياتي",
+      "لو كان الحب كلمة.. فإنتي معناها",
+      "بحبك من قبل ما أعرف يعني إيه حب ❤️",
+      "إنتي روحي، ونفَسي، ودنيتي",
+    ];
+
+    const quoteElement = document.getElementById("loveQuote");
+    let quoteIndex = 0;
+
+    function changeQuote() {
+      quoteElement.textContent = loveQuotes[quoteIndex];
+      quoteIndex = (quoteIndex + 1) % loveQuotes.length;
+    }
+
+    changeQuote(); // أول جملة
+    setInterval(changeQuote, 5000); // كل 5 ثواني
+  </script>
+
+  <body>
+    <div class="container">
+      <h1>❤️ إيمان & حسام ❤️</h1>
+
+      <p class="quote">"قصتنا مش مجرد صدفة.. دي قدر من ربنا يجمعنا ♥"</p>
+
+      <p id="loveQuote" class="love-quote"></p>
+
+      <img src="assets/love.jpg" alt="إيمان وحسام" class="love-img" />
+      <button onclick="playLove()">🎵 شغّل أغنيتنا</button>
+      <audio id="loveAudio" src="assets/love-song.mp3"></audio>
+
+      <h2>📸 ذكرياتنا</h2>
+      <!-- زر رفع الصور -->
+      <input type="file" accept="image/*" id="imageUpload" multiple />
+
+      <!-- السلايدر -->
+      <div class="slider-container">
+        <div class="slider" id="slider">
+          <img src="assets/img1.jpg" alt="صورة 1" />
+          <img src="assets/img2.jpg" alt="صورة 2" />
+          <img src="assets/img3.jpg" alt="صورة 3" />
+        </div>
+      </div>
+
+      <!-- باقي الصور العمودية -->
+      <div class="gallery">
+        <div class="photo-block fade-in">
+          <img src="assets/img4.jpg" alt="صورة 4" />
+          <p class="caption">اجمل خروجه</p>
+        </div>
+        <div class="photo-block fade-in">
+          <img src="assets/img5.jpg" alt="صورة 5" />
+          <p class="caption">كان يوم جميل</p>
+        </div>
+        <div class="photo-block fade-in">
+          <img src="assets/img6.jpg" alt="صورة 6" />
+          <p class="caption">لحظة مش ممكن أنساها</p>
+        </div>
+        <div class="photo-block fade-in">
+          <img src="assets/img7.jpg" alt="صورة 7" />
+          <p class="caption">احلي حاجه في يومي</p>
+        </div>
+        <div class="photo-block fade-in">
+          <img src="assets/img8.jpg" alt="صورة 8" />
+          <p class="caption">ضحكتك اللي بحبها</p>
+        </div>
+        <div class="photo-block fade-in">
+          <img src="assets/img9.jpg" alt="صورة 9" />
+          <p class="caption">القمر بتاعي</p>
+        </div>
+        <div class="photo-block fade-in">
+          <img src="assets/img10.jpg" alt="صورة 10" />
+          <p class="caption">انا قويه بيك وبكمل عشانك</p>
+        </div>
+      </div>
+
+      <h2>🎥 لحظاتنا بالفيديو</h2>
+      <div class="videos">
+        <video controls class="fade-in">
+          <source src="assets/video1.mp4" type="video/mp4" />
+        </video>
+        <video controls class="fade-in">
+          <source src="assets/video2.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="quick-contact">
+        <a
+          href="https://wa.me/201224988865?text=بحبك%20♥"
+          target="_blank"
+          class="contact-btn whatsapp"
+        >
+          💬 واتساب
+        </a>
+        <a href="tel:+201009898213" class="contact-btn call"> 📞 اتصال </a>
+      </div>
+
+      <!-- روابط -->
+      <a href="messages.html" class="btn">💌 افتح رسائلنا</a>
+      <a href="countdown.html" class="btn">⏳ عد تنازلي ليوم فرحنا</a>
+      <a href="memory.html" class="btn-memory">📸 ذكرياتنا</a>
+
+      <audio id="clickSound" src="assets/click.mp3" preload="auto"></audio>
+    </div>
+
+    <!-- زر الخروج اللي بيهرب -->
+    <button id="runawayBtn">🚪 خروج</button>
+
+    <footer>© 2025 - موقع الحب الأبدي لإيمان & حسام</footer>
+
+    <!-- سكربتات -->
+    <script src="script.js"></script>
+
+    <script>
+      const btn = document.getElementById("runawayBtn");
+      let runCount = 0;
+
+      function moveButton() {
+        const maxX = window.innerWidth - btn.offsetWidth - 20;
+        const maxY = window.innerHeight - btn.offsetHeight - 20;
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+        btn.style.left = `${x}px`;
+        btn.style.top = `${y}px`;
+      }
+
+      btn.addEventListener("mouseenter", () => {
+        if (runCount < 5) {
+          moveButton();
+          runCount++;
+        }
+      });
+
+      btn.addEventListener("click", () => {
+        if (runCount >= 5) {
+          window.location.href = "goodbye.html";
+        }
+      });
+    </script>
+  </body>
+</html>

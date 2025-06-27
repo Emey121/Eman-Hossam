@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta charset="UTF-8" />
+    <title>💌 رسائلنا</title>
+    <style>
+      body {
+        background: linear-gradient(to bottom, #ffe6eb, #ffd6e8);
+        font-family: "Cairo", sans-serif;
+        text-align: center;
+        padding: 40px;
+        color: #8b1e41;
+        margin: 0;
+      }
+
+      .container {
+        background: #ffffffcc;
+        padding: 30px;
+        border-radius: 25px;
+        max-width: 700px;
+        margin: auto;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        color: #d4145a;
+        margin-bottom: 25px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid #ffb6c1;
+        font-size: 16px;
+        resize: none;
+      }
+
+      button {
+        background-color: #ff5e78;
+        color: white;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background-color: #e04e66;
+      }
+
+      .messages {
+        margin-top: 30px;
+        text-align: right;
+      }
+
+      .msg {
+        background: #ffeef3;
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>💌 اكتب رسالة لحبيبك</h1>
+      <textarea id="msgInput" placeholder="اكتب كلامك الحلو هنا..."></textarea>
+      <br />
+      <button onclick="addMessage()">إرسال الرسالة</button>
+
+      <div class="messages" id="messagesBox">
+        <!-- الرسائل تظهر هنا -->
+      </div>
+    </div>
+
+    <script>
+      // حفظ الرسائل محليًا (LocalStorage)
+      const msgBox = document.getElementById("messagesBox");
+
+      function loadMessages() {
+        const msgs = JSON.parse(localStorage.getItem("loveMessages") || "[]");
+        msgBox.innerHTML = "";
+        msgs.forEach((m) => {
+          const div = document.createElement("div");
+          div.className = "msg";
+          div.innerText = m;
+          msgBox.prepend(div); // الأحدث يظهر فوق
+        });
+      }
+
+      function addMessage() {
+        const input = document.getElementById("msgInput");
+        const txt = input.value.trim();
+        if (txt === "") return;
+
+        const msgs = JSON.parse(localStorage.getItem("loveMessages") || "[]");
+        msgs.push(txt);
+        localStorage.setItem("loveMessages", JSON.stringify(msgs));
+        input.value = "";
+        loadMessages();
+      }
+
+      // تحميل الرسائل أول ما الصفحة تفتح
+      loadMessages();
+    </script>
+    <br />
+    <a href="index.html" class="btn">🏠 رجوع للصفحة الرئيسية</a>
+  </body>
+</html>

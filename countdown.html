@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta charset="UTF-8" />
+    <title>العد التنازلي ليوم فرحنا</title>
+    <style>
+      body {
+        background: linear-gradient(to bottom, #ffe6eb, #ffd6e8);
+        font-family: "Cairo", sans-serif;
+        text-align: center;
+        padding: 40px;
+        color: #8b1e41;
+        margin: 0;
+      }
+
+      .countdown-container {
+        max-width: 600px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 25px;
+        background: #ffffffcc;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        font-size: 32px;
+        margin-bottom: 30px;
+        color: #d4145a;
+      }
+
+      .circle-timer {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .circle {
+        position: relative;
+        width: 120px;
+        height: 120px;
+      }
+
+      .circle svg {
+        transform: rotate(-90deg);
+        width: 100%;
+        height: 100%;
+      }
+
+      .circle circle {
+        fill: none;
+        stroke-width: 10;
+        stroke-linecap: round;
+      }
+
+      .circle .bg {
+        stroke: #ffd6e8;
+      }
+
+      .circle .progress {
+        stroke: #d4145a;
+        transition: stroke-dashoffset 1s linear;
+      }
+
+      .circle .value {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+        font-weight: bold;
+        color: #912c47;
+      }
+
+      .circle .label {
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 14px;
+        color: #8b1e41;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="countdown-container">
+      <h1>⏳ العد التنازلي ليوم فرحنا: 26/1/2026</h1>
+      <div class="circle-timer">
+        <div class="circle">
+          <svg>
+            <circle class="bg" cx="60" cy="60" r="50" />
+            <circle class="progress" cx="60" cy="60" r="50" />
+          </svg>
+          <div class="value" id="days">--</div>
+          <div class="label">يوم</div>
+        </div>
+        <div class="circle">
+          <svg>
+            <circle class="bg" cx="60" cy="60" r="50" />
+            <circle class="progress" cx="60" cy="60" r="50" />
+          </svg>
+          <div class="value" id="hours">--</div>
+          <div class="label">ساعة</div>
+        </div>
+        <div class="circle">
+          <svg>
+            <circle class="bg" cx="60" cy="60" r="50" />
+            <circle class="progress" cx="60" cy="60" r="50" />
+          </svg>
+          <div class="value" id="minutes">--</div>
+          <div class="label">دقيقة</div>
+        </div>
+        <div class="circle">
+          <svg>
+            <circle class="bg" cx="60" cy="60" r="50" />
+            <circle class="progress" cx="60" cy="60" r="50" />
+          </svg>
+          <div class="value" id="seconds">--</div>
+          <div class="label">ثانية</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const radius = 50;
+      const circumference = 2 * Math.PI * radius;
+
+      const progressCircles = document.querySelectorAll(".progress");
+      progressCircles.forEach((circle) => {
+        circle.style.strokeDasharray = `${circumference}`;
+        circle.style.strokeDashoffset = `${circumference}`;
+      });
+
+      const targetDate = new Date("2026-01-26T00:00:00").getTime();
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+          document.querySelector(".countdown-container").innerHTML =
+            "<h1>🎉 تم يوم الفرح! مبروك!</h1>";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerText = days;
+        document.getElementById("hours").innerText = hours;
+        document.getElementById("minutes").innerText = minutes;
+        document.getElementById("seconds").innerText = seconds;
+
+        // نسبة التقدم (دائري)
+        setProgress(0, days, 365); // تقريبًا سنة
+        setProgress(1, hours, 24);
+        setProgress(2, minutes, 60);
+        setProgress(3, seconds, 60);
+      }
+
+      function setProgress(index, value, max) {
+        const offset = circumference - (value / max) * circumference;
+        progressCircles[index].style.strokeDashoffset = offset;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    </script>
+    <a href="index.html" class="back-btn">🏠 رجوع للصفحة الرئيسية</a>
+  </body>
+</html>

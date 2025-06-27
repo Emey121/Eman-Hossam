@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ذكرياتنا الجميلة</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: "Cairo", sans-serif;
+        text-align: center;
+        color: #6a1b4d;
+        padding: 30px;
+        transition: background 0.5s ease;
+      }
+
+      h1 {
+        font-size: 30px;
+        margin-bottom: 20px;
+        color: #ad1457;
+      }
+
+      .memory-upload {
+        margin-bottom: 40px;
+      }
+
+      input[type="file"],
+      textarea,
+      button {
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        width: 90%;
+        max-width: 400px;
+      }
+
+      button {
+        background-color: #ec407a;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #d81b60;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .memories {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+        margin-top: 30px;
+      }
+
+      .memory {
+        background-color: #ffffffcc;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+      }
+
+      .memory img {
+        max-width: 100%;
+        border-radius: 10px;
+      }
+
+      .memory p {
+        margin-top: 10px;
+        color: #912c47;
+        font-style: italic;
+      }
+
+      .delete-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+
+      .delete-btn:hover {
+        background-color: #d32f2f;
+      }
+
+      .share-btn {
+        margin-top: 10px;
+        background-color: #25d366;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .share-btn:hover {
+        background-color: #1ebe5b;
+      }
+
+      .btn-nav {
+        display: inline-block;
+        margin: 20px 10px 0;
+        padding: 12px 28px;
+        background-color: #ec407a;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 30px;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(236, 64, 122, 0.4);
+        transition: all 0.3s ease, transform 0.3s ease;
+        animation: pulse 1.5s infinite;
+      }
+
+      .btn-nav:hover {
+        background-color: #d81b60;
+        box-shadow: 0 6px 18px rgba(216, 27, 96, 0.5);
+        transform: scale(1.08);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 15px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        .memory-upload,
+        .memory {
+          width: 100%;
+          padding: 15px;
+        }
+
+        input[type="file"],
+        textarea,
+        button {
+          width: 100%;
+          font-size: 14px;
+        }
+
+        .btn-nav {
+          font-size: 16px;
+          padding: 10px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📸 ذكرياتنا</h1>
+
+    <div class="memory-upload">
+      <input type="file" accept="image/*" id="memoryImage" />
+      <br />
+      <textarea
+        id="memoryText"
+        rows="3"
+        placeholder="اكتب وصف الذكرى هنا..."
+      ></textarea>
+      <br />
+      <button onclick="addMemory()">➕ أضف الذكرى</button>
+    </div>
+
+    <div class="memories" id="memoriesContainer"></div>
+
+    <a href="index.html" class="btn-nav">⬅️ الرجوع إلى الصفحة الرئيسية</a>
+
+    <script>
+      const hour = new Date().getHours();
+      if (hour >= 6 && hour < 18) {
+        document.body.style.background =
+          "linear-gradient(to bottom, #fff3f6, #ffe0eb)";
+      } else {
+        document.body.style.background =
+          "linear-gradient(to bottom, #2e2e3a, #1e1e2f)";
+        document.body.style.color = "#f8bbd0";
+      }
+
+      function addMemory() {
+        const imageInput = document.getElementById("memoryImage");
+        const textInput = document.getElementById("memoryText");
+
+        if (!imageInput.files[0]) return alert("من فضلك اختر صورة للذكرى");
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const memoryData = {
+            id: Date.now(),
+            image: e.target.result,
+            text: textInput.value || "بدون وصف",
+          };
+
+          saveMemoryToLocalStorage(memoryData);
+          displayMemory(memoryData);
+
+          imageInput.value = "";
+          textInput.value = "";
+        };
+
+        reader.readAsDataURL(imageInput.files[0]);
+      }
+
+      function saveMemoryToLocalStorage(memory) {
+        let memories = JSON.parse(localStorage.getItem("memories")) || [];
+        memories.unshift(memory);
+        localStorage.setItem("memories", JSON.stringify(memories));
+      }
+
+      function deleteMemory(id) {
+        let memories = JSON.parse(localStorage.getItem("memories")) || [];
+        memories = memories.filter((m) => m.id !== id);
+        localStorage.setItem("memories", JSON.stringify(memories));
+        document.getElementById(`memory-${id}`).remove();
+      }
+
+      function displayMemory(memory) {
+        const container = document.getElementById("memoriesContainer");
+
+        const memoryDiv = document.createElement("div");
+        memoryDiv.className = "memory";
+        memoryDiv.id = `memory-${memory.id}`;
+
+        const img = document.createElement("img");
+        img.src = memory.image;
+
+        const desc = document.createElement("p");
+        desc.textContent = memory.text;
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "🗑️ حذف";
+        delBtn.className = "delete-btn";
+        delBtn.onclick = () => deleteMemory(memory.id);
+
+        const shareBtn = document.createElement("button");
+        shareBtn.textContent = "📤 مشاركة على واتساب";
+        shareBtn.className = "share-btn";
+        shareBtn.onclick = () => {
+          const text = encodeURIComponent(`📸 ذكرى جميلة:\n${memory.text}`);
+          window.open(`https://wa.me/?text=${text}`, "_blank");
+        };
+
+        memoryDiv.appendChild(img);
+        memoryDiv.appendChild(desc);
+        memoryDiv.appendChild(shareBtn);
+        memoryDiv.appendChild(delBtn);
+
+        container.appendChild(memoryDiv);
+      }
+
+      function loadMemories() {
+        let memories = JSON.parse(localStorage.getItem("memories")) || [];
+
+        if (memories.length === 0) {
+          const defaultMemories = [
+            {
+              id: Date.now() + 1,
+              image: "assets/img11.jpg",
+              text: "10/1/2024  اول يوم شوفتك فيه بعد الفرح ال حضرناه صدفه وكانت اجمل صدفه",
+            },
+
+            {
+              id: Date.now() + 2,
+              image: "assets/img12.jpg",
+              text: " 3/10/2024 اجمل يوم في حياتي واليوم ده ال قولتلي فيه اول مره انك بتحبني ♥ واليوم باردو ال قعدت فيه لاول مره تتفق مع وائل ",
+            },
+
+            {
+              id: Date.now() + 3,
+              image: "assets/img13.jpg",
+              text: " 7/10/2024 مرمطة وجمال اليوم ده لما قعدت مع وائل الساعه ١ بليل تخلصوا الاتفاق وتحدد ميعاد الخطوبه وقبلها روحنا سوا تيست نيو وعزمتني ع اجمل بيتزا ونجرسكوا 💋♥ ",
+            },
+            {
+              id: Date.now() + 4,
+              image: "assets/img14.jpg",
+              text: " 20/10/2024  كانت أول خطوة في طريق العمر	“ما بين رضا الأهل ودعوات القلب… اتربط النصيب وتمت الفاتحة 💖 ",
+            },
+
+            {
+              id: Date.now() + 5,
+              image: "assets/img15.jpg",
+              text: "21/10/2024كل تفصيلة بنختارها سوا“بنجرب البدلة… وبنجهز للحظة عمرنا سوا 🤍💍",
+            },
+          ];
+          localStorage.setItem("memories", JSON.stringify(defaultMemories));
+          memories = defaultMemories;
+        }
+
+        memories.sort((a, b) => b.id - a.id);
+        memories.forEach(displayMemory);
+      }
+
+      window.onload = loadMemories;
+    </script>
+  </body>
+</html>
